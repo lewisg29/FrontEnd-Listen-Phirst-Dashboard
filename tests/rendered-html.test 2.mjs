@@ -23,21 +23,23 @@ async function render() {
   );
 }
 
-test("server-renders the Oz account screen", async () => {
+test("server-renders the Listen Phirst dashboard", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Phicil-itate Change Oz Dashboard<\/title>/i);
-  assert.match(html, /Phicil-itate Change/);
-  assert.match(html, /Welcome to your Oz dashboard/);
-  assert.match(html, /Create account/);
-  assert.match(html, /Login/);
-  assert.doesNotMatch(html, /Listen Phirst|Blood Status|Heart Rate|Glucose Level/i);
+  assert.match(html, /<title>Listen Phirst Dashboard<\/title>/i);
+  assert.match(html, /Listen Phirst/);
+  assert.match(html, /Welcome back, Kate/);
+  assert.match(html, /Appointment Calendar/);
+  assert.match(html, /Appointment History/);
+  assert.match(html, /Care Snapshot/);
+  assert.doesNotMatch(html, /Blood Status|Heart Rate|Glucose Level/i);
+  assert.doesNotMatch(html, /Your site is taking shape|codex-preview/i);
 });
 
-test("keeps the app frontend-only and focused on Oz calls", async () => {
+test("keeps the dashboard code focused and free of starter pieces", async () => {
   const [page, layout, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
@@ -45,11 +47,12 @@ test("keeps the app frontend-only and focused on Oz calls", async () => {
   ]);
 
   assert.match(page, /"use client"/);
-  assert.match(page, /const completedCalls = \[/);
-  assert.match(page, /const navItems = \["Dashboard", "Calls", "Responses", "Insights", "Settings"\]/);
-  assert.match(page, /ElevenLabs/);
-  assert.match(layout, /title:\s*"Phicil-itate Change Oz Dashboard"/);
-  assert.doesNotMatch(page, /Prescriptions|Health Record|Listen Phirst/i);
-  assert.doesNotMatch(page, /fetch\(|axios|\/api\//i);
-  assert.doesNotMatch(packageJson, /express|axios/);
+  assert.match(page, /const appointments = \[/);
+  assert.match(page, /setSelectedDate/);
+  assert.match(page, /changeMonth/);
+  assert.match(layout, /title:\s*"Listen Phirst Dashboard"/);
+  assert.doesNotMatch(page, /Blood Status|Heart Rate|Glucose Level/i);
+  assert.doesNotMatch(page, /<img|<Image/i);
+  assert.doesNotMatch(page, /SkeletonPreview|react-loading-skeleton/);
+  assert.doesNotMatch(packageJson, /react-loading-skeleton/);
 });

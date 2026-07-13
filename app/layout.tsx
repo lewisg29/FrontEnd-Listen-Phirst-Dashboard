@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Listen Phirst Dashboard",
-  description: "A simple patient dashboard for appointments and care details.",
+  title: "Phicil-itate Change Oz Dashboard",
+  description:
+    "A simple dashboard for Oz healthcare experience phone call responses.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
