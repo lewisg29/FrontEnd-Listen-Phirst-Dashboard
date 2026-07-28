@@ -37,7 +37,7 @@ test("server-renders the Oz account screen", async () => {
   assert.doesNotMatch(html, /Listen Phirst|Blood Status|Heart Rate|Glucose Level/i);
 });
 
-test("keeps the app frontend-only and focused on Oz calls", async () => {
+test("keeps the app frontend-only and focused on Oz dashboard data", async () => {
   const [page, layout, packageJson] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
@@ -46,7 +46,8 @@ test("keeps the app frontend-only and focused on Oz calls", async () => {
 
   assert.match(page, /"use client"/);
   assert.match(page, /const completedCalls = \[/);
-  assert.match(page, /const navItems = \["Dashboard", "Calls", "Responses", "Insights", "Settings"\]/);
+  assert.match(page, /"Dashboard"[\s\S]*"Data Access"[\s\S]*"Calls"/);
+  assert.match(page, /const dataAccessRecords = \[/);
   assert.match(page, /ElevenLabs/);
   assert.match(layout, /title:\s*"Phicil-itate Change Oz Dashboard"/);
   assert.doesNotMatch(page, /Prescriptions|Health Record|Listen Phirst/i);

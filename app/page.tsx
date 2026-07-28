@@ -2,7 +2,14 @@
 
 import { FormEvent, useState } from "react";
 
-const navItems = ["Dashboard", "Calls", "Responses", "Insights", "Settings"] as const;
+const navItems = [
+  "Dashboard",
+  "Data Access",
+  "Calls",
+  "Responses",
+  "Insights",
+  "Settings",
+] as const;
 
 type NavItem = (typeof navItems)[number];
 
@@ -33,13 +40,6 @@ const completedCalls = [
   },
 ];
 
-const responseThemes = [
-  { label: "Felt listened to", value: "82%" },
-  { label: "Clear next steps", value: "64%" },
-  { label: "Scheduling friction", value: "28%" },
-  { label: "Needs callback", value: "11%" },
-];
-
 const insightCards = [
   {
     title: "Follow-up clarity",
@@ -54,6 +54,277 @@ const insightCards = [
     text: "Billing questions should be routed to a person quickly when Oz detects confusion.",
   },
 ];
+
+const patientProfile = {
+  name: "Sarah",
+  patientId: "mock_patient_sarah_001",
+  location: "Boston, MA",
+  age: 42,
+  diabetesType: "Type 2",
+  treatmentPlan: "Metformin and lifestyle management",
+  quote: "I want my experience to help make care easier for other patients.",
+};
+
+const dataAccessRecords = [
+  {
+    company: "Northstar Medical Devices",
+    companyType: "medical_device",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-01-05T14:00:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Meridian Device Works",
+    companyType: "medical_device",
+    purpose: "Market research",
+    categories: ["device_preferences", "treatment_plan"],
+    accessedAt: "2026-01-12T16:30:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Clarity Diagnostics",
+    companyType: "medical_device",
+    purpose: "Clinical trial design",
+    categories: ["outcomes", "medication_experience"],
+    accessedAt: "2026-01-20T18:15:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Northstar Medical Devices",
+    companyType: "medical_device",
+    purpose: "Care pathway improvement",
+    categories: ["digital_health", "accessibility"],
+    accessedAt: "2026-01-27T15:45:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Meridian Device Works",
+    companyType: "medical_device",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-02-06T13:20:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Clarity Diagnostics",
+    companyType: "medical_device",
+    purpose: "Market research",
+    categories: ["device_preferences", "treatment_plan"],
+    accessedAt: "2026-02-15T17:10:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Northstar Medical Devices",
+    companyType: "medical_device",
+    purpose: "Clinical trial design",
+    categories: ["outcomes", "medication_experience"],
+    accessedAt: "2026-02-24T19:05:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Meridian Device Works",
+    companyType: "medical_device",
+    purpose: "Care pathway improvement",
+    categories: ["digital_health", "accessibility"],
+    accessedAt: "2026-03-03T14:40:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Clarity Diagnostics",
+    companyType: "medical_device",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-03-08T16:05:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Northstar Medical Devices",
+    companyType: "medical_device",
+    purpose: "Market research",
+    categories: ["device_preferences", "treatment_plan"],
+    accessedAt: "2026-03-13T18:50:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Harborview Health System",
+    companyType: "hospital",
+    purpose: "Clinical trial design",
+    categories: ["outcomes", "medication_experience"],
+    accessedAt: "2026-03-18T15:30:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Willow Health Network",
+    companyType: "hospital",
+    purpose: "Care pathway improvement",
+    categories: ["digital_health", "accessibility"],
+    accessedAt: "2026-03-23T17:25:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Summit Community Hospital",
+    companyType: "hospital",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-03-27T19:10:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Harborview Health System",
+    companyType: "hospital",
+    purpose: "Market research",
+    categories: ["device_preferences", "treatment_plan"],
+    accessedAt: "2026-03-30T13:55:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Willow Health Network",
+    companyType: "hospital",
+    purpose: "Clinical trial design",
+    categories: ["outcomes", "medication_experience"],
+    accessedAt: "2026-04-09T16:20:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Summit Community Hospital",
+    companyType: "hospital",
+    purpose: "Care pathway improvement",
+    categories: ["digital_health", "accessibility"],
+    accessedAt: "2026-04-22T18:35:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Harborview Health System",
+    companyType: "hospital",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-05-02T14:10:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "BluePeak Biopharma",
+    companyType: "biopharma",
+    purpose: "Market research",
+    categories: ["device_preferences", "treatment_plan"],
+    accessedAt: "2026-05-08T17:45:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Catalyst BioWorks",
+    companyType: "biopharma",
+    purpose: "Clinical trial design",
+    categories: ["outcomes", "medication_experience"],
+    accessedAt: "2026-05-14T19:20:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "NovaCura Therapeutics",
+    companyType: "biopharma",
+    purpose: "Care pathway improvement",
+    categories: ["digital_health", "accessibility"],
+    accessedAt: "2026-05-21T15:15:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "BluePeak Biopharma",
+    companyType: "biopharma",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-05-28T18:00:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Catalyst BioWorks",
+    companyType: "biopharma",
+    purpose: "Market research",
+    categories: ["device_preferences", "treatment_plan"],
+    accessedAt: "2026-06-03T14:25:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "NovaCura Therapeutics",
+    companyType: "biopharma",
+    purpose: "Clinical trial design",
+    categories: ["outcomes", "medication_experience"],
+    accessedAt: "2026-06-07T16:40:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "CareTrail Labs",
+    companyType: "startup",
+    purpose: "Care pathway improvement",
+    categories: ["digital_health", "accessibility"],
+    accessedAt: "2026-06-11T18:05:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "PulseForge Health",
+    companyType: "startup",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-06-16T13:35:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Kindred Digital Care",
+    companyType: "startup",
+    purpose: "Market research",
+    categories: ["device_preferences", "treatment_plan"],
+    accessedAt: "2026-06-20T17:50:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "CareTrail Labs",
+    companyType: "startup",
+    purpose: "Clinical trial design",
+    categories: ["outcomes", "medication_experience"],
+    accessedAt: "2026-06-25T19:15:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "PulseForge Health",
+    companyType: "startup",
+    purpose: "Care pathway improvement",
+    categories: ["digital_health", "accessibility"],
+    accessedAt: "2026-06-29T15:05:00+00:00",
+    amount: 5,
+  },
+  {
+    company: "Kindred Digital Care",
+    companyType: "startup",
+    purpose: "Product development",
+    categories: ["demographics", "care_experience"],
+    accessedAt: "2026-07-22T14:39:45.509731+00:00",
+    amount: 5,
+  },
+] as const;
+
+const companyTypeLabels: Record<string, string> = {
+  biopharma: "Biopharma",
+  hospital: "Hospital",
+  medical_device: "Medical device",
+  startup: "Startup",
+};
+
+const dataAccessSummary = {
+  totalEarnings: dataAccessRecords.reduce((sum, record) => sum + record.amount, 0),
+  totalRecords: dataAccessRecords.length,
+  companies: new Set(dataAccessRecords.map((record) => record.company)).size,
+  latestAccess: dataAccessRecords[dataAccessRecords.length - 1].accessedAt,
+};
+
+const companyTypeSummary = Object.entries(
+  dataAccessRecords.reduce<Record<string, { count: number; earnings: number }>>(
+    (summary, record) => {
+      summary[record.companyType] ??= { count: 0, earnings: 0 };
+      summary[record.companyType].count += 1;
+      summary[record.companyType].earnings += record.amount;
+      return summary;
+    },
+    {},
+  ),
+);
 
 export default function Home() {
   const [authMode, setAuthMode] = useState<"login" | "create">("create");
@@ -121,14 +392,15 @@ export default function Home() {
             </div>
             <button
               className="rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-              onClick={() => setActiveNav("Calls")}
+              onClick={() => setActiveNav("Data Access")}
               type="button"
             >
-              Review calls
+              Review access
             </button>
           </header>
 
           {activeNav === "Dashboard" && <DashboardSection />}
+          {activeNav === "Data Access" && <DataAccessSection />}
           {activeNav === "Calls" && <CallsSection />}
           {activeNav === "Responses" && <ResponsesSection />}
           {activeNav === "Insights" && <InsightsSection />}
@@ -248,42 +520,156 @@ function DashboardSection() {
   return (
     <div className="space-y-6">
       <section className="grid gap-4 md:grid-cols-4">
-        <StatCard label="Completed calls" value="148" />
-        <StatCard label="Avg call length" value="7 min" />
-        <StatCard label="Positive feedback" value="76%" />
-        <StatCard label="Needs follow-up" value="11%" />
+        <StatCard
+          label="Total earned"
+          value={formatCurrency(dataAccessSummary.totalEarnings)}
+        />
+        <StatCard
+          label="Data accesses"
+          value={String(dataAccessSummary.totalRecords)}
+        />
+        <StatCard label="Companies" value={String(dataAccessSummary.companies)} />
+        <StatCard
+          label="Latest access"
+          value={formatShortDate(dataAccessSummary.latestAccess)}
+        />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1fr_0.85fr]">
-        <Panel title="Latest Oz Summary">
-          <p className="text-sm leading-6 text-slate-600">
-            Oz completed a phone questionnaire about a recent healthcare
-            experience. The caller said the visit went well overall, but they
-            wanted clearer instructions after leaving the appointment.
-          </p>
+        <Panel title="Patient Snapshot">
+          <blockquote className="border-l-4 border-cyan-600 pl-4 text-sm leading-6 text-slate-600">
+            {patientProfile.quote}
+          </blockquote>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <SmallMetric label="Tone" value="Calm" />
-            <SmallMetric label="Follow-up" value="Needed" />
-            <SmallMetric label="Category" value="Care clarity" />
+            <SmallMetric label="Patient" value={patientProfile.name} />
+            <SmallMetric label="Location" value={patientProfile.location} />
+            <SmallMetric label="Condition" value={patientProfile.diabetesType} />
           </div>
         </Panel>
 
-        <Panel title="Top Themes">
+        <Panel title="Data By Company Type">
           <div className="space-y-3">
-            {responseThemes.map((theme) => (
-              <div
-                className="flex items-center justify-between rounded-md bg-slate-50 p-3"
-                key={theme.label}
-              >
-                <p className="text-sm font-bold">{theme.label}</p>
-                <p className="text-sm font-bold text-cyan-700">{theme.value}</p>
-              </div>
+            {companyTypeSummary.map(([companyType, summary]) => (
+              <TypeSummaryRow
+                companyType={companyType}
+                key={companyType}
+                summary={summary}
+              />
             ))}
           </div>
         </Panel>
       </section>
+
+      <DataAccessSection compact />
     </div>
   );
+}
+
+function DataAccessSection({ compact = false }: { compact?: boolean }) {
+  const records = compact
+    ? dataAccessRecords.slice(-6).reverse()
+    : [...dataAccessRecords].reverse();
+
+  return (
+    <Panel title={compact ? "Recent Data Access" : "Data Access Records"}>
+      <div className="space-y-3">
+        {records.map((record) => (
+          <AccessRecordRow
+            key={`${record.company}-${record.accessedAt}`}
+            record={record}
+          />
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function TypeSummaryRow({
+  companyType,
+  summary,
+}: {
+  companyType: string;
+  summary: { count: number; earnings: number };
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-md bg-slate-50 p-3">
+      <div>
+        <p className="text-sm font-bold">{companyTypeLabels[companyType]}</p>
+        <p className="mt-1 text-xs font-semibold text-slate-500">
+          {summary.count} accesses
+        </p>
+      </div>
+      <p className="text-sm font-bold text-cyan-700">
+        {formatCurrency(summary.earnings)}
+      </p>
+    </div>
+  );
+}
+
+function AccessRecordRow({
+  record,
+}: {
+  record: (typeof dataAccessRecords)[number];
+}) {
+  return (
+    <article className="rounded-md border border-slate-200 p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="font-bold">{record.company}</p>
+          <p className="mt-1 text-sm text-slate-500">
+            {companyTypeLabels[record.companyType]} · {formatLongDate(record.accessedAt)}
+          </p>
+        </div>
+        <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-sm font-bold text-emerald-700">
+          {formatCurrency(record.amount)}
+        </span>
+      </div>
+
+      <p className="mt-3 text-sm font-semibold text-slate-700">
+        {record.purpose}
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {record.categories.map((category) => (
+          <span
+            className="rounded-md bg-cyan-50 px-2.5 py-1 text-xs font-bold text-cyan-700"
+            key={category}
+          >
+            {cleanCategory(category)}
+          </span>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    currency: "USD",
+    maximumFractionDigits: 0,
+    style: "currency",
+  }).format(amount);
+}
+
+function formatShortDate(date: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "short",
+  }).format(new Date(date));
+}
+
+function formatLongDate(date: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(date));
+}
+
+function cleanCategory(category: string) {
+  return category
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 function CallsSection() {
