@@ -39,8 +39,8 @@ test("server-renders the Oz account screen", async () => {
 
 test("keeps the app frontend-only and focused on Oz dashboard data", async () => {
   const [page, layout, packageJson] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
 

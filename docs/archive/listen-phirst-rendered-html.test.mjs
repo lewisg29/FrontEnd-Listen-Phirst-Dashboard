@@ -41,9 +41,9 @@ test("server-renders the Listen Phirst dashboard", async () => {
 
 test("keeps the dashboard code focused and free of starter pieces", async () => {
   const [page, layout, packageJson] = await Promise.all([
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../../src/app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../../src/app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../../package.json", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /"use client"/);
