@@ -31,5 +31,5 @@ npm test
 - `tests/rendered-html.test.mjs`: basic render checks
 - `docs/archive/`: preserved starter and older dashboard reference files
 # Listen-Phirst-Dashboard
-# FrontEnd-Listen-Phirst-Dashboard
+
 
