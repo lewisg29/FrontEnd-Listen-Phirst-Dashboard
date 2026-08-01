@@ -10,7 +10,7 @@ npm install
 npm run dev
 ```
 
-Then open the local URL printed in the terminal.
+Then open the local URL  printed in the terminal.
 
 ## Useful Commands
 
