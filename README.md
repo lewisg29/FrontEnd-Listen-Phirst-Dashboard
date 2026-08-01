@@ -32,5 +32,4 @@ npm test
 - `docs/archive/`: preserved starter and older dashboard reference files
 # Listen-Phirst-Dashboard
 # FrontEnd-Listen-Phirst-Dashboard
-# FrontEnd-Listen-Phirst-Dashboard
-# FrontEnd-Listen-Phirst-Dashboard
+
