@@ -569,10 +569,13 @@ function DataAccessSection({ compact = false }: { compact?: boolean }) {
   const records = compact
     ? dataAccessRecords.slice(-6).reverse()
     : [...dataAccessRecords].reverse();
+  const gridClassName = compact
+    ? "grid gap-3 md:grid-cols-2 xl:grid-cols-3"
+    : "grid gap-4 md:grid-cols-2 xl:grid-cols-3";
 
   return (
     <Panel title={compact ? "Recent Data Access" : "Data Access Records"}>
-      <div className="space-y-3">
+      <div className={gridClassName}>
         {records.map((record) => (
           <AccessRecordRow
             key={`${record.company}-${record.accessedAt}`}
@@ -612,9 +615,9 @@ function AccessRecordRow({
   record: (typeof dataAccessRecords)[number];
 }) {
   return (
-    <article className="rounded-md border border-slate-200 p-4">
+    <article className="flex h-full flex-col rounded-md border border-slate-200 bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <p className="font-bold">{record.company}</p>
           <p className="mt-1 text-sm text-slate-500">
             {companyTypeLabels[record.companyType]} · {formatLongDate(record.accessedAt)}
@@ -628,7 +631,7 @@ function AccessRecordRow({
       <p className="mt-3 text-sm font-semibold text-slate-700">
         {record.purpose}
       </p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-auto flex flex-wrap gap-2 pt-3">
         {record.categories.map((category) => (
           <span
             className="rounded-md bg-cyan-50 px-2.5 py-1 text-xs font-bold text-cyan-700"
