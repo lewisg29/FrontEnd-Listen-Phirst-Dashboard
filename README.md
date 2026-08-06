@@ -1,36 +1,118 @@
-# Phicil-itate Change Oz Dashboard
+FrontEnd Listen Phirst OZ Dashboard
+A React dashboard for the Phicil-itate Change Oz experience. The app shows patient feedback, completed calls, data access records, response themes, insights, and account settings.
 
-A frontend-only React and Tailwind dashboard for reviewing healthcare experience
-phone calls completed by Oz.
+Project Type
+Framework: React
+Tooling: Create React App / react-scripts
+Language: JavaScript JSX
+Styling: Plain CSS
+Data source: Local mock data in src/App.js
+Main app file: src/App.js
+Main stylesheet: src/App.css
+Features
+Create account and login screens
+Dashboard overview with total earnings, data access count, company count, and latest access date
+Data Access page with records displayed side by side in a responsive grid
+Completed Calls page
+Questionnaire Responses page
+Insights page
+Settings page with preference toggles and sign out
+Folder Structure
+frontend-listen-phirst-dashboard/
+  public/
+    index.html
+    manifest.json
+    robots.txt
+  src/
+    App.js
+    App.css
+    App.test.js
+    index.js
+    index.css
+    reportWebVitals.js
+    setupTests.js
+  package.json
+  package-lock.json
+  README.md
+Requirements
+Node.js
+npm
+The project dependencies are already listed in package.json.
 
-## Run Locally
+Install
+Run this from the React project folder:
 
-```bash
+cd frontend-listen-phirst-dashboard
 npm install
-npm run dev
-```
+Run Locally
+npm start
+By default, the app runs at:
 
-Then open the local URL printed in the terminal.
+http://localhost:3000
+If port 3000 is busy, run it on another port:
 
-## Useful Commands
+PORT=3003 npm start
+Build
+Create a production-ready build:
 
-```bash
-npm run dev
 npm run build
-npm run lint
-npm test
-```
+The compiled files are written to:
 
-## Project Shape
+build/
+Use the build/ folder when deploying the app to a static hosting service.
 
-- `src/app/page.tsx`: login/create-account screen and dashboard UI
-- `src/app/layout.tsx`: page metadata
-- `src/app/globals.css`: Tailwind and global styles
-- `src/worker/index.ts`: Cloudflare/Vinext worker entrypoint
-- `tools/sites-vite-plugin.ts`: Vite plugin that packages Sites metadata
-- `tests/rendered-html.test.mjs`: basic render checks
-- `docs/archive/`: preserved starter and older dashboard reference files
+Test
+Run the React test suite:
 
+npm test -- --watchAll=false
+Current test coverage checks that the Oz dashboard account screen renders correctly.
 
+App Specs
+Navigation
+The app uses local React state to switch between these sections:
 
+Dashboard
+Data Access
+Calls
+Responses
+Insights
+Settings
+Authentication
+Authentication is currently frontend-only. Submitting the login or create account form signs the user into the dashboard during the current browser session.
+
+Data Access Records
+Data access records are stored in src/App.js as dataAccessRecords.
+
+Each record includes:
+
+company
+companyType
+purpose
+categories
+accessedAt
+amount
+The Data Access page displays records in a responsive card grid:
+
+3 columns on large screens
+2 columns on medium screens
+1 column on mobile screens
+Dashboard Metrics
+The dashboard calculates these values from dataAccessRecords:
+
+Total earned
+Number of data accesses
+Number of unique companies
+Latest access date
+Styling
+The app uses custom CSS classes in src/App.css. The layout is responsive and designed for a clean dashboard experience with a dark sidebar, white content panels, compact cards, and readable mobile views.
+
+Deployment Notes
+Run npm run build.
+Upload or deploy the generated build/ folder.
+Make sure the hosting service serves build/index.html for the app entry point.
+Future Improvements
+Connect authentication to a backend
+Replace mock records with database or API data
+Add filters/search to the Data Access page
+Add more detailed tests for navigation and dashboard sections
 
