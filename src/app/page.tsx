@@ -326,24 +326,30 @@ const companyTypeSummary = Object.entries(
   ),
 );
 
+type AuthMethod = "password" | "otp";
+
+type AuthFieldErrors = Partial<
+  Record<"email" | "password" | "phone" | "otp", string>
+>;
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const temporaryCredentials = {
+  email: "demo@phicilitatechange.com",
+  password: "OzDemo2026!",
+};
+
 export default function Home() {
-  const [authMode, setAuthMode] = useState<"login" | "create">("create");
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [activeNav, setActiveNav] = useState<NavItem>("Dashboard");
 
-  function handleAuth(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSignedIn(true);
+  function handleSignOut() {
+    setActiveNav("Dashboard");
+    setIsSignedIn(false);
   }
 
   if (!isSignedIn) {
-    return (
-      <AuthScreen
-        authMode={authMode}
-        onSubmit={handleAuth}
-        setAuthMode={setAuthMode}
-      />
-    );
+    return <AuthScreen onAuthenticated={() => setIsSignedIn(true)} />;
   }
 
   return (
@@ -390,13 +396,22 @@ export default function Home() {
                 {activeNav}
               </h1>
             </div>
-            <button
-              className="rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
-              onClick={() => setActiveNav("Data Access")}
-              type="button"
-            >
-              Review access
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                className="h-10 rounded-md border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                onClick={handleSignOut}
+                type="button"
+              >
+                Sign out
+              </button>
+              <button
+                className="h-10 rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+                onClick={() => setActiveNav("Data Access")}
+                type="button"
+              >
+                Review access
+              </button>
+            </div>
           </header>
 
           {activeNav === "Dashboard" && <DashboardSection />}
@@ -405,7 +420,7 @@ export default function Home() {
           {activeNav === "Responses" && <ResponsesSection />}
           {activeNav === "Insights" && <InsightsSection />}
           {activeNav === "Settings" && (
-            <SettingsSection onSignOut={() => setIsSignedIn(false)} />
+            <SettingsSection onSignOut={handleSignOut} />
           )}
         </section>
       </div>
@@ -414,15 +429,82 @@ export default function Home() {
 }
 
 function AuthScreen({
-  authMode,
-  onSubmit,
-  setAuthMode,
+  onAuthenticated,
 }: {
-  authMode: "login" | "create";
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  setAuthMode: (mode: "login" | "create") => void;
+  onAuthenticated: () => void;
 }) {
-  const isCreate = authMode === "create";
+  const [authMethod, setAuthMethod] = useState<AuthMethod>("password");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [errors, setErrors] = useState<AuthFieldErrors>({});
+  const [formError, setFormError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  function validateAuthForm() {
+    const nextErrors: AuthFieldErrors = {};
+    const normalizedEmail = email.trim();
+    const phoneDigits = phone.replace(/\D/g, "");
+
+    if (!normalizedEmail) {
+      nextErrors.email = "Email is required.";
+    } else if (!emailPattern.test(normalizedEmail)) {
+      nextErrors.email = "Enter a valid email address.";
+    }
+
+    if (authMethod === "password") {
+      if (!password) {
+        nextErrors.password = "Password is required.";
+      } else if (password.length < 8) {
+        nextErrors.password = "Password must be at least 8 characters.";
+      }
+    }
+
+    if (authMethod === "otp") {
+      if (!phone.trim()) {
+        nextErrors.phone = "Phone number is required.";
+      } else if (phoneDigits.length < 10) {
+        nextErrors.phone = "Enter a valid phone number.";
+      }
+
+      if (!otp.trim()) {
+        nextErrors.otp = "OTP code is required.";
+      } else if (!/^\d{6}$/.test(otp.trim())) {
+        nextErrors.otp = "Enter the 6-digit OTP code.";
+      }
+    }
+
+    return nextErrors;
+  }
+
+  function handleAuth(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const nextErrors = validateAuthForm();
+    setErrors(nextErrors);
+    setFormError("");
+
+    if (Object.keys(nextErrors).length > 0) {
+      setFormError("Please fix the highlighted fields.");
+      return;
+    }
+
+    if (
+      authMethod === "password" &&
+      (email.trim().toLowerCase() !== temporaryCredentials.email ||
+        password !== temporaryCredentials.password)
+    ) {
+      setFormError("Use the temporary demo email and password to sign in.");
+      return;
+    }
+
+    setIsLoading(true);
+    window.setTimeout(() => {
+      setIsLoading(false);
+      onAuthenticated();
+    }, 700);
+  }
 
   return (
     <main className="grid min-h-screen place-items-center bg-[#eef3f7] p-4 text-slate-900">
@@ -438,77 +520,190 @@ function AuthScreen({
           </p>
         </div>
 
-        <form className="space-y-5 p-8 sm:p-10" onSubmit={onSubmit}>
+        <form className="space-y-5 p-8 sm:p-10" noValidate onSubmit={handleAuth}>
           <div>
             <p className="text-sm font-semibold text-cyan-700">
-              {isCreate ? "Would you like to create an account?" : "Welcome back"}
+              Secure account access
             </p>
-            <h2 className="mt-1 text-3xl font-bold">
-              {isCreate ? "Create account" : "Login"}
-            </h2>
+            <h2 className="mt-1 text-3xl font-bold">Login</h2>
           </div>
 
-          {isCreate && (
-            <label className="block">
-              <span className="text-sm font-semibold text-slate-600">
-                Full name
-              </span>
-              <input
-                className="mt-2 h-12 w-full rounded-md border border-slate-200 px-3 outline-none transition focus:border-cyan-600"
-                placeholder="Your name"
-                type="text"
-              />
-            </label>
-          )}
+          <div
+            aria-label="Login method"
+            className="grid grid-cols-2 rounded-md bg-slate-100 p-1"
+            role="tablist"
+          >
+            <button
+              aria-selected={authMethod === "password"}
+              className={`h-10 rounded-md text-sm font-bold transition ${
+                authMethod === "password"
+                  ? "bg-white text-slate-950 shadow-sm"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+              onClick={() => {
+                setAuthMethod("password");
+                setErrors({});
+                setFormError("");
+              }}
+              role="tab"
+              type="button"
+            >
+              Password
+            </button>
+            <button
+              aria-selected={authMethod === "otp"}
+              className={`h-10 rounded-md text-sm font-bold transition ${
+                authMethod === "otp"
+                  ? "bg-white text-slate-950 shadow-sm"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+              onClick={() => {
+                setAuthMethod("otp");
+                setErrors({});
+                setFormError("");
+              }}
+              role="tab"
+              type="button"
+            >
+              OTP
+            </button>
+          </div>
 
           <label className="block">
             <span className="text-sm font-semibold text-slate-600">Email</span>
             <input
-              className="mt-2 h-12 w-full rounded-md border border-slate-200 px-3 outline-none transition focus:border-cyan-600"
-              placeholder="you@company.com"
+              aria-describedby={errors.email ? "email-error" : undefined}
+              aria-invalid={Boolean(errors.email)}
+              className={`mt-2 h-12 w-full rounded-md border px-3 outline-none transition focus:border-cyan-600 ${
+                errors.email ? "border-rose-400 bg-rose-50" : "border-slate-200"
+              }`}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder={temporaryCredentials.email}
+              value={email}
               type="email"
             />
+            {errors.email && (
+              <span className="mt-2 block text-sm font-semibold text-rose-700" id="email-error">
+                {errors.email}
+              </span>
+            )}
           </label>
 
-          <label className="block">
-            <span className="text-sm font-semibold text-slate-600">
-              Password
-            </span>
-            <input
-              className="mt-2 h-12 w-full rounded-md border border-slate-200 px-3 outline-none transition focus:border-cyan-600"
-              placeholder="Enter your password"
-              type="password"
-            />
-          </label>
-
-          {isCreate && (
+          {authMethod === "password" && (
             <label className="block">
               <span className="text-sm font-semibold text-slate-600">
-                Organization
+                Password
               </span>
               <input
-                className="mt-2 h-12 w-full rounded-md border border-slate-200 px-3 outline-none transition focus:border-cyan-600"
-                placeholder="Clinic, hospital, or startup"
-                type="text"
+                aria-describedby={errors.password ? "password-error" : undefined}
+                aria-invalid={Boolean(errors.password)}
+                className={`mt-2 h-12 w-full rounded-md border px-3 outline-none transition focus:border-cyan-600 ${
+                  errors.password
+                    ? "border-rose-400 bg-rose-50"
+                    : "border-slate-200"
+                }`}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter your password"
+                type="password"
+                value={password}
               />
+              {errors.password && (
+                <span
+                  className="mt-2 block text-sm font-semibold text-rose-700"
+                  id="password-error"
+                >
+                  {errors.password}
+                </span>
+              )}
             </label>
           )}
 
-          <button
-            className="h-12 w-full rounded-md bg-slate-950 text-sm font-bold text-white transition hover:bg-slate-800"
-            type="submit"
-          >
-            {isCreate ? "Create account" : "Login"}
-          </button>
+          {authMethod === "otp" && (
+            <div className="grid gap-5 sm:grid-cols-[1.2fr_0.8fr]">
+              <label className="block">
+                <span className="text-sm font-semibold text-slate-600">
+                  Phone
+                </span>
+                <input
+                  aria-describedby={errors.phone ? "phone-error" : undefined}
+                  aria-invalid={Boolean(errors.phone)}
+                  className={`mt-2 h-12 w-full rounded-md border px-3 outline-none transition focus:border-cyan-600 ${
+                    errors.phone
+                      ? "border-rose-400 bg-rose-50"
+                      : "border-slate-200"
+                  }`}
+                  inputMode="tel"
+                  onChange={(event) => setPhone(event.target.value)}
+                  placeholder="(555) 014-2086"
+                  type="tel"
+                  value={phone}
+                />
+                {errors.phone && (
+                  <span
+                    className="mt-2 block text-sm font-semibold text-rose-700"
+                    id="phone-error"
+                  >
+                    {errors.phone}
+                  </span>
+                )}
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-semibold text-slate-600">
+                  OTP code
+                </span>
+                <input
+                  aria-describedby={errors.otp ? "otp-error" : undefined}
+                  aria-invalid={Boolean(errors.otp)}
+                  className={`mt-2 h-12 w-full rounded-md border px-3 outline-none transition focus:border-cyan-600 ${
+                    errors.otp
+                      ? "border-rose-400 bg-rose-50"
+                      : "border-slate-200"
+                  }`}
+                  inputMode="numeric"
+                  maxLength={6}
+                  onChange={(event) => setOtp(event.target.value)}
+                  placeholder="123456"
+                  type="text"
+                  value={otp}
+                />
+                {errors.otp && (
+                  <span
+                    className="mt-2 block text-sm font-semibold text-rose-700"
+                    id="otp-error"
+                  >
+                    {errors.otp}
+                  </span>
+                )}
+              </label>
+            </div>
+          )}
+
+          <div className="rounded-md border border-cyan-100 bg-cyan-50 px-4 py-3 text-sm text-cyan-950">
+            <p className="font-bold">Temporary demo access</p>
+            <p className="mt-1 font-semibold">
+              Email: {temporaryCredentials.email}
+            </p>
+            <p className="font-semibold">
+              Password: {temporaryCredentials.password}
+            </p>
+          </div>
+
+          {formError && (
+            <div
+              className="rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700"
+              role="alert"
+            >
+              {formError}
+            </div>
+          )}
 
           <button
-            className="w-full text-sm font-semibold text-cyan-700 hover:text-cyan-900"
-            onClick={() => setAuthMode(isCreate ? "login" : "create")}
-            type="button"
+            className="h-12 w-full rounded-md bg-slate-950 text-sm font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+            disabled={isLoading}
+            type="submit"
           >
-            {isCreate
-              ? "Already have an account? Login"
-              : "Need an account? Create one"}
+            {isLoading ? "Signing in..." : "Login"}
           </button>
         </form>
       </section>
