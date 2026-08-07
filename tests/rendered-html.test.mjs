@@ -32,8 +32,13 @@ test("server-renders the Oz account screen", async () => {
   assert.match(html, /<title>Phicil-itate Change Oz Dashboard<\/title>/i);
   assert.match(html, /Phicil-itate Change/);
   assert.match(html, /Welcome to your Oz dashboard/);
-  assert.match(html, /Create account/);
+  assert.match(html, /Secure account access/);
+  assert.match(html, /demo@phicilitatechange\.com/);
+  assert.match(html, /OzDemo2026!/);
+  assert.match(html, /Password/);
+  assert.match(html, /OTP/);
   assert.match(html, /Login/);
+  assert.doesNotMatch(html, /you@company\.com/i);
   assert.doesNotMatch(html, /Listen Phirst|Blood Status|Heart Rate|Glucose Level/i);
 });
 
@@ -45,6 +50,12 @@ test("keeps the app frontend-only and focused on Oz dashboard data", async () =>
   ]);
 
   assert.match(page, /"use client"/);
+  assert.match(page, /Email is required/);
+  assert.match(page, /Enter a valid email address/);
+  assert.match(page, /Use the temporary demo email and password/);
+  assert.match(page, /OTP code is required/);
+  assert.match(page, /Signing in\.\.\./);
+  assert.match(page, /Sign out/);
   assert.match(page, /const completedCalls = \[/);
   assert.match(page, /"Dashboard"[\s\S]*"Data Access"[\s\S]*"Calls"/);
   assert.match(page, /const dataAccessRecords = \[/);
